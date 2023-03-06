@@ -8,11 +8,13 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql" // New import
+	"snippetbox.krehwell.com/internal/models"
 )
 
 type application struct {
 	errorLog *log.Logger
 	infoLog  *log.Logger
+	snippets *models.SnippetModel
 }
 
 func main() {
@@ -31,7 +33,11 @@ func main() {
 
 	defer db.Close()
 
-	app := &application{infoLog: infoLog, errorLog: errorLog}
+	app := &application{
+		infoLog:  infoLog,
+		errorLog: errorLog,
+		snippets: &models.SnippetModel{DB: db},
+	}
 
 	srv := &http.Server{
 		Addr:     *addr,
