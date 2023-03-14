@@ -20,7 +20,7 @@ func (v *Validator) AddFieldError(field string, message string) {
 }
 
 func (v *Validator) Valid() bool {
-    return len(v.FieldErrors) == 0
+	return len(v.FieldErrors) == 0
 }
 
 func (v *Validator) CheckField(ok bool, key string, message string) {
