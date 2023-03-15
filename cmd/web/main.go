@@ -10,12 +10,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/alexedwards/scs/mysqlstore" // New import
-	"github.com/alexedwards/scs/v2"         // New import
+	"github.com/alexedwards/scs/mysqlstore"
+	"github.com/alexedwards/scs/v2"
 	"snippetbox.krehwell.com/internal/models"
 
 	"github.com/go-playground/form/v4"
-	_ "github.com/go-sql-driver/mysql" // New import
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type application struct {
