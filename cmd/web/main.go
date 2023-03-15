@@ -19,11 +19,12 @@ import (
 )
 
 type application struct {
-	errorLog      *log.Logger
-	infoLog       *log.Logger
-	snippets      *models.SnippetModel
-	templateCache map[string]*template.Template
-	formDecoder   *form.Decoder
+	errorLog       *log.Logger
+	infoLog        *log.Logger
+	snippets       *models.SnippetModel
+	users          *models.UserModel
+	templateCache  map[string]*template.Template
+	formDecoder    *form.Decoder
 	sessionManager *scs.SessionManager
 }
 
@@ -56,25 +57,26 @@ func main() {
 	sessionManager.Cookie.Secure = true
 
 	app := &application{
-		infoLog:       infoLog,
-		errorLog:      errorLog,
-		snippets:      &models.SnippetModel{DB: db},
-		templateCache: templateCache,
-		formDecoder:   formDecoder,
+		infoLog:        infoLog,
+		errorLog:       errorLog,
+		snippets:       &models.SnippetModel{DB: db},
+		users:          &models.UserModel{DB: db},
+		templateCache:  templateCache,
+		formDecoder:    formDecoder,
 		sessionManager: sessionManager,
 	}
 
-	tlsConfig := &tls.Config {
+	tlsConfig := &tls.Config{
 		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
 	}
 
 	srv := &http.Server{
-		Addr:     *addr,
-		ErrorLog: errorLog,
-		Handler:  app.routes(),
-		TLSConfig: tlsConfig,
-		IdleTimeout: time.Minute,
-		ReadTimeout: 5 * time.Second,
+		Addr:         *addr,
+		ErrorLog:     errorLog,
+		Handler:      app.routes(),
+		TLSConfig:    tlsConfig,
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
 
