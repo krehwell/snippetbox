@@ -1,12 +1,14 @@
 package main
 
 import (
+    "html"
 	"bytes"
 	"io"
 	"log"
 	"net/http"
 	"net/http/cookiejar"
 	"net/http/httptest"
+    "regexp"
 	"testing"
 	"time"
 
@@ -15,6 +17,8 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-playground/form/v4"
 )
+
+var csrfToken = regexp.MustCompile(`<input type='hidden' name='csrf_token' value='(.+)'>`)
 
 func newTestApplication(t *testing.T) *application {
 	templateCache, err := newTemplateCache()
@@ -67,6 +71,7 @@ func newTestServer(t *testing.T, h http.Handler) *testServer {
 	return &testServer{ts}
 }
 
+// Fetcher "GET" method
 func (ts *testServer) get(t *testing.T, urlPath string) (int, http.Header, string) {
 	rs, err := ts.Client().Get(ts.URL + urlPath)
 	if err != nil {
