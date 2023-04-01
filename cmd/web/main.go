@@ -26,11 +26,13 @@ type application struct {
 	templateCache  map[string]*template.Template
 	formDecoder    *form.Decoder
 	sessionManager *scs.SessionManager
+	debug          bool
 }
 
 func main() {
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	dsn := flag.String("dsn", "web:pass@/snippetbox?parseTime=true", "MySQL data source name")
+	debug := flag.Bool("debug", false, "Debug mode")
 
 	flag.Parse()
 
@@ -64,6 +66,7 @@ func main() {
 		templateCache:  templateCache,
 		formDecoder:    formDecoder,
 		sessionManager: sessionManager,
+		debug:          *debug,
 	}
 
 	tlsConfig := &tls.Config{
@@ -80,7 +83,12 @@ func main() {
 		WriteTimeout: 10 * time.Second,
 	}
 
-	infoLog.Printf("Starting server on %v", *addr)
+	if app.debug {
+		infoLog.Printf("Starting server on %v with `-debug` flag", *addr)
+	} else {
+
+		infoLog.Printf("Starting server on %v", *addr)
+	}
 	err = srv.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
 	errorLog.Fatal(err)
 }
